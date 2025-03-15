@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "chess-tap-timer",
+    "name": "Chess Tap Timer",
     "slug": "chess-tap-timer",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFF3E5"
       }
     },
     "web": {
@@ -28,9 +28,8 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#FFF3E5"
         }
       ]
     ],
