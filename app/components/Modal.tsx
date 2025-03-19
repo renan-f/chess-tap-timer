@@ -1,5 +1,5 @@
-import React, { Children, ReactNode } from 'react';
-import { Modal, StyleSheet, Text, Pressable, View } from 'react-native';
+import React, { ReactNode } from 'react';
+import { Modal, StyleSheet, Text, View } from 'react-native';
 
 interface IProps {
     children: ReactNode,
