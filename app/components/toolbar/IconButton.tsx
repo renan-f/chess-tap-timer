@@ -3,8 +3,8 @@ import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface IProps {
-  icon: any,
-  text: string,
+  icon?: any,
+  text?: string,
   onPress: () => void
 }
 
@@ -14,8 +14,8 @@ const IconButton = ({ icon, text, onPress }: IProps) => {
       style={[styles.button, { gap: 8 }]}
       onPress={onPress}
     >
-      <Ionicons name={icon} size={16} color="white" />
-      <Text style={styles.buttonText}>{text}</Text>
+      {icon && <Ionicons name={icon} size={16} color="white" />}
+      {text && <Text style={styles.buttonText}>{text}</Text>}
     </TouchableOpacity>
   );
 };
