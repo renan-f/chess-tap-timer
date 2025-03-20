@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     modalHeader: {
         flex: 1,
         flexDirection: 'column',
-        maxHeight: 44,
+        maxHeight: 52,
         padding: 12,
         width: '100%',
         backgroundColor: '#3c3a37',
