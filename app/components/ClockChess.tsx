@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimerArea from './TimerArea';
 import Toolbar from './toolbar/Toolbar';
-import ModalComponent from './Modal';
+import ModalComponent from './ModalComponent';
 import ModalTimerConfiguration from './ModalTimerConfiguration';
 
 const ClockChess = () => {
