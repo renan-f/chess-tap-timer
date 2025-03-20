@@ -3,17 +3,33 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface IProps {
     backgroundColor: string,
+    timeConfig: string,
     onTap: (ref: any) => any
 }
 
-const TimerArea = forwardRef(({ backgroundColor, onTap }: IProps, ref) => {
-    const DEFAULT_TIME_SECONDS = 60 * 10;
-    const [time, setTime] = useState<number>(DEFAULT_TIME_SECONDS)
-
+const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig }: IProps, ref) => {
     const timerRef = useRef<any>(null);
     const startTimeRef = useRef<any>(null);
 
+    const [timeSeconds, setTimeSeconds] = useState<number>(0);
+    const [increaseTimeSeconds, setIncreaseTimeSeconds] = useState<number>(0);
+    const [time, setTime] = useState<number>(timeSeconds);
+    const [active, setActive] = useState<boolean>(false);
+
+    useEffect(() => {
+        const [TIME_SECONDS, INCREASE_TIME_SECONDS] = spliteTimes(timeConfig);
+        setTimeSeconds(TIME_SECONDS);
+        setIncreaseTimeSeconds(INCREASE_TIME_SECONDS);
+        resetTimer(TIME_SECONDS);
+    }, [timeConfig]);
+
+    const spliteTimes = (timeConfig: string) => {
+        const times = timeConfig.split('+');
+        return [Number(times[0]), Number(times[1] ?? 0)]
+    }
+
     const startTimer = () => {
+        setActive(true);
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
@@ -24,7 +40,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap }: IProps, ref) => {
             const elapsed = (Date.now() - startTimeRef.current) / 1000;
             startTimeRef.current = Date.now();
 
-            setTime(prevTime => {
+            setTime((prevTime: any) => {
                 const newTime = prevTime - elapsed;
                 if (newTime <= 0) {
                     clearInterval(timerRef.current);
@@ -36,28 +52,34 @@ const TimerArea = forwardRef(({ backgroundColor, onTap }: IProps, ref) => {
     };
 
     const pauseTimer = () => {
+        setActive(false);
         if (timerRef.current) {
             clearInterval(timerRef.current);
         }
     };
 
-    const resetTimer = () => {
+    const increaseTimer = () => {
+        if (active) {
+            setTime((value) => value + increaseTimeSeconds);
+        }
+    }
+
+    const resetTimer = (TIME_SECONDS?: number) => {
         pauseTimer();
-        setTime(DEFAULT_TIME_SECONDS);
+        setTime(TIME_SECONDS || timeSeconds);
     };
 
     useImperativeHandle(ref, () => ({
         start: startTimer,
         pause: pauseTimer,
-        reset: resetTimer
+        reset: resetTimer,
+        active
     }));
 
     useEffect(() => {
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current);
-            }
-        };
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
     }, []);
 
 
@@ -68,6 +90,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap }: IProps, ref) => {
     };
 
     const handlePressOut = () => {
+        increaseTimer();
         pauseTimer();
         onTap(ref);
     }

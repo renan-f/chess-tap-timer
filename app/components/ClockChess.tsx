@@ -1,13 +1,28 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimerArea from './TimerArea';
 import Toolbar from './toolbar/Toolbar';
+import ModalComponent from './Modal';
+import ModalTimerConfiguration from './ModalTimerConfiguration';
 
 const ClockChess = () => {
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [timeConfig, setTimeConfig] = useState<string>('')
     const playerOne = useRef<any>(null);
     const playerTwo = useRef<any>(null);
 
-    const handlerOnTap = (ref: any) => {
+    useEffect(() => {
+        AsyncStorage.getItem('timeConfig').then(value => {
+            if (!value) {
+                value = '600';
+                AsyncStorage.setItem('timeConfig', '600');
+            }
+            setTimeConfig(value)
+        })
+    })
+
+    const handleOnTap = (ref: any) => {
         getRefNewPlayerByOnTap(ref).current.start();
     }
 
@@ -17,6 +32,7 @@ const ClockChess = () => {
         pausePlayer(playerOne);
         pausePlayer(playerTwo);
     };
+
     const handleReset = () => {
         resetPlayer(playerOne);
         resetPlayer(playerTwo);
@@ -32,11 +48,24 @@ const ClockChess = () => {
         player.current.reset();
     }
 
+    const handleOnSettings = () => {
+        handlePause();
+        setModalVisible(!modalVisible);
+    }
+
+    const handleConfirmationChangeTime = (value: string) => {
+        setModalVisible(!modalVisible);
+        AsyncStorage.setItem('timeConfig', value);
+    }
+
     return (
         <View style={styles.container}>
-            <TimerArea ref={playerOne} backgroundColor='#5d9948' onTap={handlerOnTap} />
-            <Toolbar onPause={handlePause} onReset={handleReset} style={styles.toolbar} />
-            <TimerArea ref={playerTwo} backgroundColor='#c7c7c6' onTap={handlerOnTap} />
+            <TimerArea ref={playerOne} backgroundColor='#5d9948' onTap={handleOnTap} timeConfig={timeConfig} />
+            <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} style={styles.toolbar} />
+            <TimerArea ref={playerTwo} backgroundColor='#c7c7c6' onTap={handleOnTap} timeConfig={timeConfig} />
+            <ModalComponent title='Configurações' modalVisible={modalVisible}>
+                <ModalTimerConfiguration onConfirmation={handleConfirmationChangeTime} onCancel={() => setModalVisible(!modalVisible)} />
+            </ModalComponent>
         </View>
     );
 };

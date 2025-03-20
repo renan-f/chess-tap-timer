@@ -17,7 +17,9 @@ const ModalComponent = ({ children, modalVisible, title }: IProps) => {
                 {title && <View style={styles.modalHeader}>
                     <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>{title}</Text>
                 </View>}
-                {children}
+                <View style={{ flex: 1, width: '100%', padding: 12 }}>
+                    {children}
+                </View>
             </View>
         </Modal>
     </>);
