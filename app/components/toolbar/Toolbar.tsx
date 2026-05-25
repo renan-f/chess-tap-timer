@@ -6,12 +6,13 @@ interface IProps {
     onPause: () => void,
     onReset: () => void,
     onSetting: () => void,
+    paused: boolean,
 }
 
-const Toolbar = ({ onPause, onReset, onSetting, style }: IProps) => {
+const Toolbar = ({ onPause, onReset, onSetting, paused, style }: IProps) => {
     return (
         <View style={[styles.tools, style]}>
-            <IconButton icon='play' text='pause' onPress={onPause} />
+            <IconButton icon={paused ? 'play' : 'pause'} text={paused ? 'continue' : 'pause'} onPress={onPause} />
             <IconButton icon='refresh' text='resete' onPress={onReset} />
             <IconButton icon='settings' onPress={onSetting} style={styles.settings} />
         </View>
