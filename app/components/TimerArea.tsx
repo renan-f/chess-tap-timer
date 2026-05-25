@@ -1,16 +1,18 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 
 interface IProps {
     backgroundColor: string,
     timeConfig: string,
     onTap: (ref: any) => any,
-    inverted?: boolean
+    inverted?: boolean,
+    highlighted?: boolean
 }
 
-const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false }: IProps, ref) => {
+const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false, highlighted = false }: IProps, ref) => {
     const timerRef = useRef<any>(null);
     const startTimeRef = useRef<any>(null);
+    const pulseAnim = useRef(new Animated.Value(0)).current;
 
     const [timeSeconds, setTimeSeconds] = useState<number>(0);
     const [increaseTimeSeconds, setIncreaseTimeSeconds] = useState<number>(0);
@@ -83,6 +85,33 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
         }
     }, []);
 
+    useEffect(() => {
+        if (!highlighted) {
+            pulseAnim.stopAnimation();
+            pulseAnim.setValue(0);
+            return;
+        }
+
+        const pulse = Animated.loop(
+            Animated.sequence([
+                Animated.timing(pulseAnim, {
+                    toValue: 1,
+                    duration: 900,
+                    useNativeDriver: true,
+                }),
+                Animated.timing(pulseAnim, {
+                    toValue: 0,
+                    duration: 900,
+                    useNativeDriver: true,
+                }),
+            ])
+        );
+
+        pulse.start();
+
+        return () => pulse.stop();
+    }, [highlighted, pulseAnim]);
+
 
     const formatTime = (timeInSeconds: number) => {
         const minutes = Math.floor(timeInSeconds / 60);
@@ -97,9 +126,28 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
     }
 
     return (
-        <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }]}>
+        <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }, highlighted && styles.highlightedArea]}>
+            {highlighted && (
+                <>
+                    <View pointerEvents="none" style={styles.highlightOverlay} />
+                    <Animated.View
+                        pointerEvents="none"
+                        style={[
+                            styles.pulseOverlay,
+                            {
+                                opacity: pulseAnim.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: [0.12, 0.28],
+                                }),
+                            },
+                        ]}
+                    />
+                </>
+            )}
             <View style={inverted && styles.inverted}>
-                <Text style={styles.timer}>{formatTime(time)}</Text>
+                <View style={highlighted && styles.highlightedTimerWrapper}>
+                    <Text style={[styles.timer, highlighted && styles.highlightedTimer]}>{formatTime(time)}</Text>
+                </View>
             </View>
         </Pressable>
     )
@@ -111,12 +159,36 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        overflow: 'hidden'
+    },
+    highlightedArea: {
+        elevation: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.35,
+        shadowRadius: 12,
+        zIndex: 1,
+    },
+    highlightOverlay: {
+        ...StyleSheet.absoluteFill,
+        borderColor: 'rgba(255, 255, 255, 0.52)',
+        borderWidth: 4,
+    },
+    pulseOverlay: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: '#ffffff',
+    },
+    highlightedTimerWrapper: {
+        transform: [{ scale: 1.04 }],
     },
     timer: {
         fontSize: 48,
         fontWeight: 'bold',
         fontFamily: 'monospace',
+    },
+    highlightedTimer: {
+        color: '#050505',
     },
     inverted: {
         transform: [{ rotate: '180deg' }],

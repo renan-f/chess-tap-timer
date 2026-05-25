@@ -10,6 +10,7 @@ const ClockChess = () => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [timeConfig, setTimeConfig] = useState<string>('')
     const [paused, setPaused] = useState<boolean>(false);
+    const [activePlayer, setActivePlayer] = useState<'playerOne' | 'playerTwo' | null>(null);
     const playerOne = useRef<any>(null);
     const playerTwo = useRef<any>(null);
     const currentPlayer = useRef<any>(null);
@@ -28,6 +29,7 @@ const ClockChess = () => {
         const nextPlayer = getRefNewPlayerByOnTap(ref);
         nextPlayer.current.start();
         currentPlayer.current = nextPlayer;
+        setActivePlayer(Object.is(nextPlayer, playerOne) ? 'playerOne' : 'playerTwo');
         setPaused(false);
     }
 
@@ -55,6 +57,7 @@ const ClockChess = () => {
         resetPlayer(playerOne);
         resetPlayer(playerTwo);
         currentPlayer.current = null;
+        setActivePlayer(null);
         setPaused(false);
     };
 
@@ -77,14 +80,28 @@ const ClockChess = () => {
         setModalVisible(!modalVisible);
         AsyncStorage.setItem('timeConfig', value);
         currentPlayer.current = null;
+        setActivePlayer(null);
         setPaused(false);
     }
 
     return (
         <View style={styles.container}>
-            <TimerArea ref={playerOne} backgroundColor='#5d9948' onTap={handleOnTap} timeConfig={timeConfig} inverted />
+            <TimerArea
+                ref={playerOne}
+                backgroundColor='#5d9948'
+                onTap={handleOnTap}
+                timeConfig={timeConfig}
+                inverted
+                highlighted={activePlayer === 'playerOne'}
+            />
             <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} paused={paused} style={styles.toolbar} />
-            <TimerArea ref={playerTwo} backgroundColor='#c7c7c6' onTap={handleOnTap} timeConfig={timeConfig} />
+            <TimerArea
+                ref={playerTwo}
+                backgroundColor='#c7c7c6'
+                onTap={handleOnTap}
+                timeConfig={timeConfig}
+                highlighted={activePlayer === 'playerTwo'}
+            />
             <ModalComponent title='Configurações' modalVisible={modalVisible}>
                 <ModalTimerConfiguration onConfirmation={handleConfirmationChangeTime} onCancel={() => setModalVisible(!modalVisible)} />
             </ModalComponent>
