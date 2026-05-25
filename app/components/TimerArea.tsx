@@ -4,10 +4,11 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 interface IProps {
     backgroundColor: string,
     timeConfig: string,
-    onTap: (ref: any) => any
+    onTap: (ref: any) => any,
+    inverted?: boolean
 }
 
-const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig }: IProps, ref) => {
+const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false }: IProps, ref) => {
     const timerRef = useRef<any>(null);
     const startTimeRef = useRef<any>(null);
 
@@ -97,7 +98,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig }: IProps, re
 
     return (
         <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }]}>
-            <View>
+            <View style={inverted && styles.inverted}>
                 <Text style={styles.timer}>{formatTime(time)}</Text>
             </View>
         </Pressable>
@@ -116,6 +117,9 @@ const styles = StyleSheet.create({
         fontSize: 48,
         fontWeight: 'bold',
         fontFamily: 'monospace',
+    },
+    inverted: {
+        transform: [{ rotate: '180deg' }],
     }
 })
 

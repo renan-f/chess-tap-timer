@@ -60,7 +60,7 @@ const ClockChess = () => {
 
     return (
         <View style={styles.container}>
-            <TimerArea ref={playerOne} backgroundColor='#5d9948' onTap={handleOnTap} timeConfig={timeConfig} />
+            <TimerArea ref={playerOne} backgroundColor='#5d9948' onTap={handleOnTap} timeConfig={timeConfig} inverted />
             <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} style={styles.toolbar} />
             <TimerArea ref={playerTwo} backgroundColor='#c7c7c6' onTap={handleOnTap} timeConfig={timeConfig} />
             <ModalComponent title='Configurações' modalVisible={modalVisible}>
