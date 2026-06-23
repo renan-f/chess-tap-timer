@@ -6,13 +6,15 @@ interface IProps {
     timeConfig: string,
     onTap: (ref: any) => any,
     inverted?: boolean,
-    highlighted?: boolean
+    highlighted?: boolean,
+    dimmed?: boolean
 }
 
-const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false, highlighted = false }: IProps, ref) => {
+const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false, highlighted = false, dimmed = false }: IProps, ref) => {
     const timerRef = useRef<any>(null);
     const startTimeRef = useRef<any>(null);
     const pulseAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(1)).current;
 
     const [timeSeconds, setTimeSeconds] = useState<number>(0);
     const [increaseTimeSeconds, setIncreaseTimeSeconds] = useState<number>(0);
@@ -86,6 +88,25 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
     }, []);
 
     useEffect(() => {
+        if (highlighted) {
+            scaleAnim.setValue(0.85);
+            Animated.spring(scaleAnim, {
+                toValue: 1.15,
+                useNativeDriver: true,
+                tension: 70,
+                friction: 7,
+            }).start();
+        } else {
+            Animated.spring(scaleAnim, {
+                toValue: 1,
+                useNativeDriver: true,
+                tension: 70,
+                friction: 7,
+            }).start();
+        }
+    }, [highlighted]);
+
+    useEffect(() => {
         if (!highlighted) {
             pulseAnim.stopAnimation();
             pulseAnim.setValue(0);
@@ -127,6 +148,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
 
     return (
         <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }, highlighted && styles.highlightedArea]}>
+            {dimmed && <View pointerEvents="none" style={styles.dimOverlay} />}
             {highlighted && (
                 <>
                     <View pointerEvents="none" style={styles.highlightOverlay} />
@@ -137,7 +159,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
                             {
                                 opacity: pulseAnim.interpolate({
                                     inputRange: [0, 1],
-                                    outputRange: [0.12, 0.28],
+                                    outputRange: [0.08, 0.2],
                                 }),
                             },
                         ]}
@@ -145,9 +167,9 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
                 </>
             )}
             <View style={inverted && styles.inverted}>
-                <View style={highlighted && styles.highlightedTimerWrapper}>
+                <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
                     <Text style={[styles.timer, highlighted && styles.highlightedTimer]}>{formatTime(time)}</Text>
-                </View>
+                </Animated.View>
             </View>
         </Pressable>
     )
@@ -170,17 +192,18 @@ const styles = StyleSheet.create({
         shadowRadius: 12,
         zIndex: 1,
     },
+    dimOverlay: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: 'rgba(0, 0, 0, 0.32)',
+    },
     highlightOverlay: {
         ...StyleSheet.absoluteFill,
-        borderColor: 'rgba(255, 255, 255, 0.52)',
-        borderWidth: 4,
+        borderColor: 'rgba(255, 255, 255, 0.88)',
+        borderWidth: 6,
     },
     pulseOverlay: {
         ...StyleSheet.absoluteFill,
         backgroundColor: '#ffffff',
-    },
-    highlightedTimerWrapper: {
-        transform: [{ scale: 1.04 }],
     },
     timer: {
         fontSize: 48,
