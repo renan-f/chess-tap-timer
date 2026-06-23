@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Modal, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface IProps {
     children: ReactNode,
@@ -8,16 +9,17 @@ interface IProps {
 }
 
 const ModalComponent = ({ children, modalVisible, title }: IProps) => {
+    const insets = useSafeAreaInsets();
     return (<>
         <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}>
             <View style={styles.modal}>
-                {title && <View style={styles.modalHeader}>
+                {title && <View style={[styles.modalHeader, { paddingTop: insets.top + 12, maxHeight: insets.top + 52 }]}>
                     <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>{title}</Text>
                 </View>}
-                <View style={{ flex: 1, width: '100%', padding: 12 }}>
+                <View style={{ flex: 1, width: '100%', padding: 12, paddingBottom: Math.max(12, insets.bottom) }}>
                     {children}
                 </View>
             </View>
