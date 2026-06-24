@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     modalHeader: {
-        flex: 1,
-        flexDirection: 'column',
-        maxHeight: 52,
-        padding: 12,
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 52,
+        paddingHorizontal: 16,
         width: '100%',
         backgroundColor: '#3c3a37',
     }
