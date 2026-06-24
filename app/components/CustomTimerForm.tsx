@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "../i18n";
 import { CustomTimer } from "../types/timer";
 
@@ -40,6 +40,7 @@ const CustomTimerForm = ({ onAdd, onBack }: IProps) => {
                     onChangeText={v => setInputMinutes(v.replace(/\D/g, ''))}
                     placeholder="10"
                     placeholderTextColor="#c7c7c6"
+                    underlineColorAndroid="transparent"
                     autoFocus
                 />
                 <Text style={styles.fieldHint}>{t('custom.gameTimeHint')}</Text>
@@ -53,6 +54,7 @@ const CustomTimerForm = ({ onAdd, onBack }: IProps) => {
                     onChangeText={v => setInputIncrement(v.replace(/\D/g, ''))}
                     placeholder="0"
                     placeholderTextColor="#c7c7c6"
+                    underlineColorAndroid="transparent"
                 />
                 <Text style={styles.fieldHint}>{t('custom.incrementHint')}</Text>
             </View>
@@ -101,6 +103,7 @@ const styles = StyleSheet.create({
         padding: 12,
         fontSize: 16,
         backgroundColor: '#fff',
+        ...Platform.select({ web: { outlineWidth: 0 } as any }),
     },
     buttonGroup: {
         gap: 8,
