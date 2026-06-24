@@ -16,9 +16,12 @@ const ModalComponent = ({ children, modalVisible, title }: IProps) => {
             transparent={true}
             visible={modalVisible}>
             <View style={styles.modal}>
-                {title && <View style={[styles.modalHeader, { paddingTop: insets.top + 12, maxHeight: insets.top + 52 }]}>
-                    <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>{title}</Text>
-                </View>}
+                {title && <>
+                    <View style={{ height: insets.top, width: '100%', backgroundColor: '#3c3a37' }} />
+                    <View style={styles.modalHeader}>
+                        <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>{title}</Text>
+                    </View>
+                </>}
                 <View style={{ flex: 1, width: '100%', padding: 12, paddingBottom: Math.max(12, insets.bottom) }}>
                     {children}
                 </View>

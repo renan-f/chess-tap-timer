@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Platform, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,7 +27,7 @@ const ClockChess = () => {
             }
             setTimeConfig(value)
         })
-    })
+    }, [])
 
     const handleOnTap = (ref: any) => {
         const nextPlayer = getRefNewPlayerByOnTap(ref);
@@ -113,6 +113,7 @@ const ClockChess = () => {
     const handleConfirmationChangeTime = (value: string) => {
         setModalVisible(!modalVisible);
         AsyncStorage.setItem('timeConfig', value);
+        setTimeConfig(value);
         currentPlayer.current = null;
         setActivePlayer(null);
         setPaused(false);

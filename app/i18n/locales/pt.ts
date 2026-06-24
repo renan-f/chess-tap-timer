@@ -16,6 +16,18 @@ export default {
     cancel: 'Cancelar',
     confirm: 'Reiniciar tempos',
   },
+  custom: {
+    addButton: 'Adicionar tempo personalizado',
+    helpText: 'Defina o tempo da partida',
+    gameTime: 'Tempo base',
+    gameTimeHint: 'Em minutos para cada jogador.',
+    increment: 'Incremento',
+    incrementHint: 'Segundos adicionados após cada lance.',
+    add: 'Adicionar',
+    back: 'Voltar',
+    minuteUnit: 'min',
+    secondUnit: 'seg',
+  },
   timers: {
     t60: '1 Minuto',
     t60_1: '1 Minuto + 1 segundo',
