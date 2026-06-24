@@ -93,6 +93,7 @@ const ClockChess = () => {
                 timeConfig={timeConfig}
                 inverted
                 highlighted={activePlayer === 'playerOne'}
+                dimmed={activePlayer !== null && activePlayer !== 'playerOne'}
             />
             <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} paused={paused} style={styles.toolbar} />
             <TimerArea
@@ -101,6 +102,7 @@ const ClockChess = () => {
                 onTap={handleOnTap}
                 timeConfig={timeConfig}
                 highlighted={activePlayer === 'playerTwo'}
+                dimmed={activePlayer !== null && activePlayer !== 'playerTwo'}
             />
             <ModalComponent title='Configurações' modalVisible={modalVisible}>
                 <ModalTimerConfiguration onConfirmation={handleConfirmationChangeTime} onCancel={() => setModalVisible(!modalVisible)} />
