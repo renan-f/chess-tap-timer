@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Platform, View, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimerArea from './TimerArea';
 import Toolbar from './toolbar/Toolbar';
@@ -7,6 +8,7 @@ import ModalComponent from './ModalComponent';
 import ModalTimerConfiguration from './ModalTimerConfiguration';
 
 const ClockChess = () => {
+    const insets = useSafeAreaInsets();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [timeConfig, setTimeConfig] = useState<string>('')
     const [paused, setPaused] = useState<boolean>(false);
@@ -123,6 +125,7 @@ const ClockChess = () => {
                 timeConfig={timeConfig}
                 inverted
                 highlighted={activePlayer === 'playerOne'}
+                style={{ paddingTop: insets.top }}
                 dimmed={activePlayer !== null && activePlayer !== 'playerOne'}
             />
             <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} paused={paused} style={styles.toolbar} />
@@ -132,6 +135,7 @@ const ClockChess = () => {
                 onTap={handleOnTap}
                 timeConfig={timeConfig}
                 highlighted={activePlayer === 'playerTwo'}
+                style={{ paddingBottom: insets.bottom }}
                 dimmed={activePlayer !== null && activePlayer !== 'playerTwo'}
             />
             <ModalComponent title='Configurações' modalVisible={modalVisible}>

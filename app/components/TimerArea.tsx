@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 interface IProps {
     backgroundColor: string,
@@ -7,10 +7,11 @@ interface IProps {
     onTap: (ref: any) => any,
     inverted?: boolean,
     highlighted?: boolean,
+    style?: StyleProp<ViewStyle>,
     dimmed?: boolean
 }
 
-const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false, highlighted = false, dimmed = false }: IProps, ref) => {
+const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = false, highlighted = false, style, dimmed = false }: IProps, ref) => {
     const timerRef = useRef<any>(null);
     const startTimeRef = useRef<any>(null);
     const pulseAnim = useRef(new Animated.Value(0)).current;
@@ -147,7 +148,7 @@ const TimerArea = forwardRef(({ backgroundColor, onTap, timeConfig, inverted = f
     }
 
     return (
-        <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }, highlighted && styles.highlightedArea]}>
+        <Pressable onPressOut={handlePressOut} style={[styles.area, { backgroundColor }, highlighted && styles.highlightedArea, style]}>
             {dimmed && <View pointerEvents="none" style={styles.dimOverlay} />}
             {highlighted && (
                 <>
