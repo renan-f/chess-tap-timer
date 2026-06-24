@@ -12,23 +12,34 @@ interface IProps {
 const Toolbar = ({ onPause, onReset, onSetting, paused, style }: IProps) => {
     return (
         <View style={[styles.tools, style]}>
-            <IconButton icon={paused ? 'play' : 'pause'} text={paused ? 'continue' : 'pause'} onPress={onPause} />
-            <IconButton icon='refresh' text='resete' onPress={onReset} />
-            <IconButton icon='settings' onPress={onSetting} style={styles.settings} />
+            <View style={styles.side} />
+            <View style={styles.center}>
+                <IconButton icon={paused ? 'play' : 'pause'} text={paused ? 'continue' : 'pause'} onPress={onPause} style={styles.mainButton} />
+                <IconButton icon='refresh' text='resete' onPress={onReset} style={styles.mainButton} />
+            </View>
+            <View style={styles.side}>
+                <IconButton icon='settings' onPress={onSetting} />
+            </View>
         </View>
     );
 }
+
 const styles = StyleSheet.create({
     tools: {
-        flexDirection: "row",
-        justifyContent: 'center',
-        gap: 20,
-        position: 'relative'
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 8,
     },
-    settings: {
-        position: 'absolute',
-        right: 16,
-        top: 12
+    center: {
+        flexDirection: 'row',
+        gap: 16,
+    },
+    side: {
+        flex: 1,
+        alignItems: 'flex-end',
+    },
+    mainButton: {
+        width: 102
     }
 })
 

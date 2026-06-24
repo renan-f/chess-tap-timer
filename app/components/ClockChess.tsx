@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Alert, Platform, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimerArea from './TimerArea';
@@ -55,12 +55,42 @@ const ClockChess = () => {
         }
     };
 
-    const handleReset = () => {
+    const executeReset = () => {
         resetPlayer(playerOne);
         resetPlayer(playerTwo);
         currentPlayer.current = null;
         setActivePlayer(null);
         setPaused(false);
+    };
+
+    const handleReset = () => {
+        const wasActive = !paused && currentPlayer.current !== null;
+        pauseGame();
+
+        const onCancel = () => {
+            if (wasActive) {
+                currentPlayer.current?.current?.start();
+                setPaused(false);
+            }
+        };
+
+        if (Platform.OS === 'web') {
+            if (window.confirm('Deseja resetar os tempos?')) {
+                executeReset();
+            } else {
+                onCancel();
+            }
+            return;
+        }
+
+        Alert.alert(
+            'Resetar partida',
+            'Deseja resetar os tempos?',
+            [
+                { text: 'Cancelar', style: 'cancel', onPress: onCancel },
+                { text: 'Resetar tempos', style: 'destructive', onPress: executeReset },
+            ]
+        );
     };
 
     const pausePlayer = (player: any) => {
@@ -96,6 +126,7 @@ const ClockChess = () => {
                 inverted
                 highlighted={activePlayer === 'playerOne'}
                 style={{ paddingTop: insets.top }}
+                dimmed={activePlayer !== null && activePlayer !== 'playerOne'}
             />
             <Toolbar onPause={handlePause} onReset={handleReset} onSetting={handleOnSettings} paused={paused} style={styles.toolbar} />
             <TimerArea
@@ -105,6 +136,7 @@ const ClockChess = () => {
                 timeConfig={timeConfig}
                 highlighted={activePlayer === 'playerTwo'}
                 style={{ paddingBottom: insets.bottom }}
+                dimmed={activePlayer !== null && activePlayer !== 'playerTwo'}
             />
             <ModalComponent title='Configurações' modalVisible={modalVisible}>
                 <ModalTimerConfiguration onConfirmation={handleConfirmationChangeTime} onCancel={() => setModalVisible(!modalVisible)} />

@@ -29,7 +29,7 @@ const ModalTimerConfiguration = ({ onConfirmation, onCancel }: IProps) => {
                 <Text style={[styles.buttonText, { color: 'white' }]}>Confirmar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { backgroundColor: '#c7c7c6' }]} onPress={() => onCancel()}>
-                <Text style={[styles.buttonText, { color: 'black', fontWeight: '600' }]}>Cancelar</Text>
+                <Text style={[styles.buttonText, { color: '#3c3a37', fontWeight: '600' }]}>Cancelar</Text>
             </TouchableOpacity>
         </View>
     );
@@ -37,13 +37,13 @@ const ModalTimerConfiguration = ({ onConfirmation, onCancel }: IProps) => {
 
 const styles = StyleSheet.create({
     button: {
-        padding: 8,
+        padding: 14,
         borderRadius: 8,
         alignItems: 'center'
     },
     buttonText: {
         fontWeight: 'bold',
-        fontSize: 14
+        fontSize: 16
     }
 });
 
