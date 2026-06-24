@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { Alert, Platform, View, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimerArea from './TimerArea';
 import Toolbar from './toolbar/Toolbar';
@@ -53,12 +53,42 @@ const ClockChess = () => {
         }
     };
 
-    const handleReset = () => {
+    const executeReset = () => {
         resetPlayer(playerOne);
         resetPlayer(playerTwo);
         currentPlayer.current = null;
         setActivePlayer(null);
         setPaused(false);
+    };
+
+    const handleReset = () => {
+        const wasActive = !paused && currentPlayer.current !== null;
+        pauseGame();
+
+        const onCancel = () => {
+            if (wasActive) {
+                currentPlayer.current?.current?.start();
+                setPaused(false);
+            }
+        };
+
+        if (Platform.OS === 'web') {
+            if (window.confirm('Deseja resetar os tempos?')) {
+                executeReset();
+            } else {
+                onCancel();
+            }
+            return;
+        }
+
+        Alert.alert(
+            'Resetar partida',
+            'Deseja resetar os tempos?',
+            [
+                { text: 'Cancelar', style: 'cancel', onPress: onCancel },
+                { text: 'Resetar tempos', style: 'destructive', onPress: executeReset },
+            ]
+        );
     };
 
     const pausePlayer = (player: any) => {
