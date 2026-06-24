@@ -6,8 +6,10 @@ import TimerArea from './TimerArea';
 import Toolbar from './toolbar/Toolbar';
 import ModalComponent from './ModalComponent';
 import ModalTimerConfiguration from './ModalTimerConfiguration';
+import { useTranslation } from '../i18n';
 
 const ClockChess = () => {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [timeConfig, setTimeConfig] = useState<string>('')
@@ -75,7 +77,7 @@ const ClockChess = () => {
         };
 
         if (Platform.OS === 'web') {
-            if (window.confirm('Deseja resetar os tempos?')) {
+            if (window.confirm(t('reset.message'))) {
                 executeReset();
             } else {
                 onCancel();
@@ -84,11 +86,11 @@ const ClockChess = () => {
         }
 
         Alert.alert(
-            'Resetar partida',
-            'Deseja resetar os tempos?',
+            t('reset.title'),
+            t('reset.message'),
             [
-                { text: 'Cancelar', style: 'cancel', onPress: onCancel },
-                { text: 'Resetar tempos', style: 'destructive', onPress: executeReset },
+                { text: t('reset.cancel'), style: 'cancel', onPress: onCancel },
+                { text: t('reset.confirm'), style: 'destructive', onPress: executeReset },
             ]
         );
     };
@@ -138,7 +140,7 @@ const ClockChess = () => {
                 style={{ paddingBottom: insets.bottom }}
                 dimmed={activePlayer !== null && activePlayer !== 'playerTwo'}
             />
-            <ModalComponent title='Configurações' modalVisible={modalVisible}>
+            <ModalComponent title={t('settings.title')} modalVisible={modalVisible}>
                 <ModalTimerConfiguration onConfirmation={handleConfirmationChangeTime} onCancel={() => setModalVisible(!modalVisible)} />
             </ModalComponent>
         </View>

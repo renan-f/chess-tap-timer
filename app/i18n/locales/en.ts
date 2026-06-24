@@ -1,0 +1,33 @@
+export default {
+  toolbar: {
+    pause: 'Pause',
+    continue: 'Continue',
+    reset: 'Reset',
+  },
+  settings: {
+    title: 'Settings',
+    selectTime: 'Select match time',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+  },
+  reset: {
+    title: 'Reset game',
+    message: 'Do you want to reset the times?',
+    cancel: 'Cancel',
+    confirm: 'Reset times',
+  },
+  timers: {
+    t60: '1 Minute',
+    t60_1: '1 Minute + 1 second',
+    t120_1: '2 Minutes + 1 second',
+    t180: '3 Minutes',
+    t180_2: '3 Minutes + 2 seconds',
+    t300: '5 Minutes',
+    t300_5: '5 Minutes + 5 seconds',
+    t600: '10 Minutes',
+    t600_5: '10 Minutes + 5 seconds',
+    t900_10: '15 Minutes + 10 seconds',
+    t1800: '30 Minutes',
+    t3600: '60 Minutes',
+  },
+};
