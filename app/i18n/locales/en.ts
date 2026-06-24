@@ -16,6 +16,18 @@ export default {
     cancel: 'Cancel',
     confirm: 'Reset times',
   },
+  custom: {
+    addButton: 'Add custom time',
+    helpText: 'Set the match time',
+    gameTime: 'Base time',
+    gameTimeHint: 'In minutes for each player.',
+    increment: 'Increment',
+    incrementHint: 'Seconds added after each move.',
+    add: 'Add',
+    back: 'Back',
+    minuteUnit: 'min',
+    secondUnit: 'sec',
+  },
   timers: {
     t60: '1 Minute',
     t60_1: '1 Minute + 1 second',
