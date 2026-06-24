@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import RadioButton from "./RadioButton";
 import chessTimers from "../constants/ChessTimers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTranslation } from "../i18n";
 
 interface IProps {
     onConfirmation: (value: string) => void,
@@ -10,26 +11,30 @@ interface IProps {
 }
 
 const ModalTimerConfiguration = ({ onConfirmation, onCancel }: IProps) => {
+    const { t } = useTranslation();
     const [selectedValue, setSelectedValue] = useState<string>('');
+
     useEffect(() => {
         AsyncStorage.getItem('timeConfig').then(value => setSelectedValue(value as string))
     }, []);
 
+    const translatedTimers = chessTimers.map(timer => ({ ...timer, label: t(timer.label) }));
+
     return (
         <View style={{ flex: 1, gap: 8 }}>
             <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 16 }}>Selecione o tempo da partida</Text>
+                <Text style={{ fontSize: 16 }}>{t('settings.selectTime')}</Text>
                 <RadioButton
-                    options={chessTimers}
+                    options={translatedTimers}
                     selectedValue={selectedValue}
                     onValueChange={(value) => setSelectedValue(value)}
                 />
             </View>
             <TouchableOpacity style={[styles.button, { backgroundColor: '#5d9948' }]} onPress={() => onConfirmation(selectedValue)}>
-                <Text style={[styles.buttonText, { color: 'white' }]}>Confirmar</Text>
+                <Text style={[styles.buttonText, { color: 'white' }]}>{t('settings.confirm')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, { backgroundColor: '#c7c7c6' }]} onPress={() => onCancel()}>
-                <Text style={[styles.buttonText, { color: '#3c3a37', fontWeight: '600' }]}>Cancelar</Text>
+                <Text style={[styles.buttonText, { color: '#3c3a37', fontWeight: '600' }]}>{t('settings.cancel')}</Text>
             </TouchableOpacity>
         </View>
     );
